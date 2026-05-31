@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERSPACE ILMHUB</title>
+    <!-- Google Fonts для неонового геймерского стиля -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* НОВАЯ ПОЛНОСТЬЮ ИЗМЕНЕННАЯ ЦВЕТОВАЯ ГАММА (Cyber Deep Neon) */
+        :root {
+            --bg-main: #060713;          /* Глубокий космический черный */
+            --bg-card: #0d0e29;          /* Темно-сине-фиолетовые карточки */
+            --accent-neon: #ff007f;      /* Неоновый розовый */
+            --accent-cyan: #00f2fe;      /* Яркий циан / бирюзовый */
+            --accent-purple: #7000ff;    /* Фиолетовый электрик */
+            --accent-gold: #ffbd03;      /* Золотой для Короны разработчика */
+            --text-main: #e2e8f0;        /* Светло-серый текст */
+            --text-muted: #94a3b8;       /* Потускневший текст */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+
+        /* Задний фон с эффектом сетки */
+        .grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(112, 0, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(112, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px; z-index: -1;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Хедер */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid var(--accent-purple); }
+        .logo { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: 2px; color: #fff; }
+        .accent-text { color: var(--accent-neon); text-shadow: 0 0 10px var(--accent-neon); }
+        .btn-lang { background: transparent; border: 2px solid var(--accent-cyan); color: var(--accent-cyan); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+        .btn-lang:hover { background: var(--accent-cyan); color: #000; box-shadow: 0 0 15px var(--accent-cyan); }
+
+        .hidden { display: none !important; }
+
+        /* Экраны */
+        .screen { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* КАРТОЧКИ ВЫБОРА АККАУНТА */
+        .account-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin: 40px 0; }
+        .card { background: var(--bg-card); border: 2px solid var(--accent-purple); border-radius: 20px; padding: 30px; text-align: center; position: relative; overflow: hidden; transition: all 0.3s; }
+        
+        /* Разделение стилей: Разработчик выделяется фиолетово-розовым неоном */
+        .card-dev { border-color: var(--accent-neon); box-shadow: 0 0 10px rgba(255, 0, 127, 0.1); }
+        .card-dev:hover { border-color: var(--accent-neon); box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); transform: translateY(-5px); }
+        .card-stud { border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 242, 254, 0.1); }
+        .card-stud:hover { border-color: var(--accent-cyan); box-shadow: 0 0 30px rgba(0, 242, 254, 0.4); transform: translateY(-5px); }
+
+        .card h2 { font-family: 'Orbitron', sans-serif; margin-bottom: 15px; font-size: 1.6rem; letter-spacing: 1px; }
+        .card p { color: var(--text-muted); margin-bottom: 25px; font-size: 1.1rem; }
+
+        /* Кнопки */
+        .btn { display: inline-block; width: 100%; padding: 12px 24px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.3s; font-family: 'Orbitron', sans-serif; text-decoration: none; text-align: center; }
+        .btn-neon { background: var(--accent-neon); color: #fff; box-shadow: 0 0 15px var(--accent-neon); }
+        .btn-neon:hover { background: #fff; color: var(--accent-neon); box-shadow: 0 0 25px #fff; }
+        .btn-cyan { background: var(--accent-cyan); color: #000; box-shadow: 0 0 15px var(--accent-cyan); }
+        .btn-cyan:hover { background: #fff; color: #000; box-shadow: 0 0 25px #fff; }
+        .btn-epic { background: linear-gradient(45deg, var(--accent-purple), var(--accent-neon)); color: #fff; }
+        .btn-epic:hover { box-shadow: 0 0 20px var(--accent-neon); transform: scale(1.02); }
+        .btn-danger { background: #ff0055 !important; color: #fff !important; box-shadow: none !important; }
+        .btn-danger:hover { background: #fff !important; color: #ff0055 !important; }
+
+        /* ПРОМО БЛОК (БОЛЬШЕ ТЕКСТА И ФОТОК В ГЛАВНОМ МЕНЮ) */
+        .promo-section { background: var(--bg-card); border: 1px solid var(--accent-purple); border-radius: 20px; padding: 40px; margin-top: 40px; }
+        .promo-section h3 { font-family: 'Orbitron', sans-serif; text-align: center; color: #fff; margin-bottom: 15px; font-size: 1.8rem; }
+        .promo-subtext { text-align: center; color: var(--accent-cyan); margin-bottom: 40px; font-size: 1.2rem; }
+        
+        .promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .promo-item { background: rgba(6, 7, 19, 0.6); border: 1px solid rgba(112, 0, 255, 0.3); border-radius: 14px; padding: 20px; text-align: center; }
+        .promo-img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--accent-cyan); background: #15173c; }
+        .promo-item h4 { font-family: 'Orbitron', sans-serif; color: #fff; margin-bottom: 10px; font-size: 1.2rem; }
+        .promo-item p { color: var(--text-muted); font-size: 1rem; line-height: 1.4; }
+
+        /* НОВЫЙ БЛОК YOUTUBE КАНАЛОВ СНИЗУ */
+        .youtube-section { margin-top: 50px; padding: 30px; background: linear-gradient(180deg, transparent, rgba(255, 0, 127, 0.1)); border-top: 1px solid rgba(255, 0, 127, 0.3); border-radius: 0 0 20px 20px; text-align: center; }
+        .youtube-title { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin-bottom: 20px; color: #fff; letter-spacing: 1px; }
+        .youtube-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .btn-yt { max-width: 280px; background: #ff0000; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+        .btn-yt:hover { background: #fff; color: #ff0000; box-shadow: 0 0 25px #fff; }
+
+        /* Формы авторизации / регистрации */
+        .form-screen { display: flex; justify-content: center; margin-top: 40px; }
+        .form-container { background: var(--bg-card); border: 2px solid var(--accent-purple); padding: 40px; border-radius: 20px; width: 100%; max-width: 450px; box-shadow: 0 0 30px rgba(112, 0, 255, 0.2); }
+        .form-container h2 { font-family: 'Orbitron', sans-serif; text-align: center; margin-bottom: 30px; color: #fff; font-size: 1.5rem; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: var(--text-muted); font-weight: bold; }
+        .input-group input { width: 100%; padding: 12px; background: #060713; border: 1px solid var(--accent-purple); border-radius: 8px; color: #fff; font-size: 1rem; transition: all 0.3s; }
+        .input-group input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); }
+        .form-container .btn { margin-top: 10px; margin-bottom: 15px; }
+        .btn-back { background: transparent; color: var(--text-muted); text-align: center; width: 100%; display: block; cursor: pointer; font-weight: bold; }
+        .btn-back:hover { color: #fff; }
+
+        /* Уведомления об ошибках / успехе */
+        .error-text { color: #ff0055; text-align: center; margin-bottom: 15px; font-weight: bold; }
+        .success-text { color: #00ffcc; text-align: center; margin-bottom: 15px; font-weight: bold; }
+
+        /* ПАНЕЛЬ УПРАВЛЕНИЯ (DASHBOARD) */
+        .dashboard-layout { display: grid; grid-template-columns: 250px 1fr; gap: 20px; margin-top: 20px; min-height: 550px; }
+        .sidebar { background: var(--bg-card); border: 2px solid var(--accent-purple); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        .team-badge { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--accent-cyan); text-align: center; padding: 10px; border-bottom: 1px solid rgba(112, 0, 255, 0.3); margin-bottom: 20px; }
+        .nav-menu { display: flex; flex-direction: column; gap: 10px; }
+        .btn-nav { background: transparent; border: 1px solid transparent; color: var(--text-muted); text-align: left; padding: 12px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: all 0.3s; }
+        .btn-nav:hover, .btn-nav.active { background: rgba(112, 0, 255, 0.2); color: #fff; border-color: var(--accent-purple); }
+        
+        .main-content { background: var(--bg-card); border: 2px solid var(--accent-purple); border-radius: 20px; padding: 25px; position: relative; display: flex; flex-direction: column; }
+        .dashboard-tab { display: flex; flex-direction: column; flex-grow: 1; height: 100%; }
+
+        /* Чат */
+        .chat-container { display: flex; flex-direction: column; height: 400px; background: #060713; border: 1px solid var(--accent-purple); border-radius: 12px; overflow: hidden; }
+        .chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Элемент сообщения */
+        .chat-bubble { max-width: 75%; padding: 10px 15px; border-radius: 14px; position: relative; color: #fff; font-size: 1rem; line-height: 1.4; display: flex; flex-direction: column; }
+        .bubble-stud { background: rgba(0, 242, 254, 0.1); border: 1px solid var(--accent-cyan); align-self: flex-start; }
+        .bubble-dev { background: rgba(255, 0, 127, 0.1); border: 1px solid var(--accent-neon); align-self: flex-end; }
+        .msg-sender-info { font-size: 0.8rem; font-weight: bold; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+        .msg-sender-stud { color: var(--accent-cyan); }
+        .msg-sender-dev { color: var(--accent-neon); }
+        
+        /* КНОПКА УДАЛЕНИЯ ДЛЯ РАЗРАБОТЧИКА */
+        .btn-delete-msg { background: transparent; border: none; color: #ff0055; cursor: pointer; font-size: 0.8rem; font-weight: bold; margin-left: 10px; padding: 2px 5px; border-radius: 4px; transition: background 0.2s; }
+        .btn-delete-msg:hover { background: rgba(255, 0, 85, 0.2); }
+
+        .chat-uploaded-img { max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 5px; border: 1px solid rgba(255,255,255,0.2); }
+        
+        /* Панель отправки */
+        .chat-input-bar { display: flex; gap: 10px; padding: 10px; background: rgba(13, 14, 41, 0.8); border-top: 1px solid var(--accent-purple); }
+        .chat-input-bar input { flex-grow: 1; background: #060713; border: 1px solid var(--accent-purple); padding: 10px; border-radius: 8px; color: #fff; }
+        .chat-input-bar input:focus { outline: none; border-color: var(--accent-cyan); }
+        .btn-icon { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #15173c; border: 1px solid var(--accent-purple); border-radius: 8px; cursor: pointer; color: #fff; font-size: 1.2rem; }
+        .btn-icon:hover { border-color: var(--accent-neon); color: var(--accent-neon); }
+
+        /* Вкладка INFO и ОБЪЯВЛЕНИЯ */
+        .announcements-list { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; overflow-y: auto; max-height: 300px; }
+        .announcement-item { background: #060713; border-left: 4px solid var(--accent-neon); padding: 15px; border-radius: 0 12px 12px 0; font-size: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .announcement-text { flex-grow: 1; padding-right: 15px; }
+
+        /* Список участников */
+        .members-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .member-row { display: flex; justify-content: space-between; align-items: center; background: #060713; padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(112, 0, 255, 0.2); }
+        .member-name { font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        /* Корона для разработчика */
+        .crown-icon { color: var(--accent-gold); text-shadow: 0 0 8px var(--accent-gold); font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+
+    <div class="container">
+        <!-- ОБЩИЙ ХЕДЕР -->
+        <header>
+            <div class="logo" id="main-logo" style="cursor:pointer;" onclick="logout()">
+                <span id="main-title-text">🚀 CYBERSPACE <span class='accent-text'>ILMHUB</span></span>
+            </div>
+            <button class="btn-lang" id="lang-toggle" onclick="toggleLanguage()">🌐 EN</button>
+        </header>
+
+        <!-- ================= СХЕМА 1: ГЛАВНОЕ МЕНЮ ================= -->
+        <div id="screen-main" class="screen">
+            <div class="account-selector">
+                <!-- КАРТОЧКА РАЗРАБОТЧИКА -->
+                <div class="card card-dev">
+                    <h2 id="card-dev-title" style="color: var(--accent-neon);">DEVELOPER ACCOUNT</h2>
+                    <p id="card-dev-desc">Manage worlds, teams and source code</p>
+                    <button class="btn btn-neon" id="btn-dev-login" onclick="showScreen('screen-login', 'dev')">LOGIN TO NET</button>
+                </div>
+                <!-- КАРТОЧКА СТУДЕНТА -->
+                <div class="card card-stud">
+                    <h2 id="card-stud-title" style="color: var(--accent-cyan);">STUDENT ACCOUNT</h2>
+                    <p id="card-stud-desc">Level up skills and build web apps</p>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-cyan" id="btn-stud-login" onclick="showScreen('screen-login', 'student')">SIGN IN</button>
+                        <button class="btn btn-epic" id="btn-stud-reg" onclick="showScreen('screen-register')">REGISTER</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ОБНОВЛЕННЫЙ ПРОМО-БЛОК С ТЕКСТОМ И ФОТОКАМИ -->
+            <div class="promo-section">
+                <h3 id="promo-header">✨ WHAT AWAITS YOU ON THE PLATFORM? ✨</h3>
+                <p class="promo-subtext" id="promo-sub">ilmhub is an interactive academy where you turn from a player into a creator!</p>
+                
+                <div class="promo-grid">
+                    <div class="promo-item">
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80" class="promo-img" alt="Chat Dev">
+                        <h4 id="feat1-title">Communication with others</h4>
+                        <p id="feat1-desc">Chat in real time, share epic ideas with like-minded creators and find code friends!</p>
+                    </div>
+                    <div class="promo-item">
+                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80" class="promo-img" alt="Guilds">
+                        <h4 id="feat2-title">Team Websites</h4>
+                        <p id="feat2-desc">Join powerful guilds and build massive websites. One for all, all for code!</p>
+                    </div>
+                    <div class="promo-item">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=400&q=80" class="promo-img" alt="Apps Future">
+                        <h4 id="feat3-title">Apps of the Future</h4>
+                        <p id="feat3-desc">Design awesome user interfaces and build useful mobile apps used by millions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- НОВЫЙ БЛОК: ССЫЛКИ НА YOUTUBE КАНАЛЫ -->
+            <div class="youtube-section">
+                <div class="youtube-title">📺 НАШИ ОФИЦИАЛЬНЫЕ YOUTUBE КАНАЛЫ / BIZNING YOUTUBE KANALLARIMIZ</div>
+                <div class="youtube-buttons">
+                    <a href="http://www.youtube.com/@IlmhubSchool" target="_blank" class="btn btn-yt">🔺 Ilmhub School</a>
+                    <a href="http://www.youtube.com/@DEVPATH-777" target="_blank" class="btn btn-yt">🔺 DEVPATH-777</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= СХЕМА 2: СХЕМА ВХОДА ================= -->
+        <div id="screen-login" class="screen hidden form-screen">
+            <div class="form-container">
+                <h2 id="login-title">SYSTEM AUTHENTICATION</h2>
+                <div class="error-text hidden" id="login-error">❌ INCORRECT LOGICAL ACCESS CODE!</div>
+                <div class="input-group">
+                    <label>USERNAME / LOGIN</label>
+                    <input type="text" id="login-username" placeholder="Enter identity name...">
+                </div>
+                <div class="input-group">
+                    <label>PASSWORD / ACCESS KEY</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-epic" id="btn-do-login" onclick="handleLogin()">AUTHORIZE</button>
+                <span class="btn-back" id="btn-back-main1" onclick="logout()">← BACK TO MAIN</span>
+            </div>
+        </div>
+
+        <!-- ================= СХЕМА 3: СХЕМА РЕГИСТРАЦИИ ================= -->
+        <div id="screen-register" class="screen hidden form-screen">
+            <div class="form-container">
+                <h2 id="reg-title">PLAYER REGISTRATION</h2>
+                <div class="error-text hidden" id="reg-error">❌ NAME TAKEN OR FIELDS ARE EMPTY!</div>
+                <div class="success-text hidden" id="reg-success">🎉 ACCOUNT DEPLOYED! REDIRECTING...</div>
+                <div class="input-group">
+                    <label>CREATE USERNAME</label>
+                    <input type="text" id="reg-username" placeholder="Your future nickname...">
+                </div>
+                <div class="input-group">
+                    <label>CREATE PASSWORD</label>
+                    <input type="password" id="reg-password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-cyan" id="btn-do-reg" onclick="handleRegister()">GET ACCOUNT</button>
+                <span class="btn-back" id="btn-back-main2" onclick="logout()">← BACK TO MAIN</span>
+            </div>
+        </div>
+
+        <!-- ================= СХЕМА 4: ВЫБОР КОМАНДЫ ДЛЯ СТУДЕНТА ================= -->
+        <div id="screen-student-team" class="screen hidden form-screen">
+            <div class="form-container">
+                <h2 id="team-join-title">🔑 TELEPORT TO TEAM</h2>
+                <div class="error-text hidden" id="team-join-error">❌ TEAM NOT FOUND OR WRONG ACCESS CODE!</div>
+                <div class="input-group">
+                    <label>TEAM NAME</label>
+                    <input type="text" id="team-join-name" placeholder="Enter target team name...">
+                </div>
+                <div class="input-group">
+                    <label>TEAM PASSWORD</label>
+                    <input type="password" id="team-join-pass" placeholder="••••••••">
+                </div>
+                <button class="btn btn-cyan" id="btn-join-team" onclick="handleJoinTeam()">BREAK IN</button>
+            </div>
+        </div>
+
+        <!-- ================= СХЕМА 5: ПАНЕЛЬ ДЛЯ РАЗРАБОТЧИКА ================= -->
+        <div id="screen-dev-choice" class="screen hidden form-screen">
+            <div class="form-container" style="max-width: 500px;">
+                <h2 id="dev-panel-title">⚡ CONTROL CENTER</h2>
+                <button class="btn btn-neon" id="btn-dev-create-screen" style="margin-bottom:15px;" onclick="showScreen('screen-create-team')">🛠️ CREATE NEW TEAM</button>
+                <button class="btn btn-cyan" id="btn-dev-join-screen" onclick="showScreen('screen-student-team')">👁️ ENTER EXISTING TEAM</button>
+            </div>
+        </div>
+
+        <!-- ================= СХЕМА 6: СОЗДАНИЕ КОМАНДЫ РАЗРАБОТЧИКОМ ================= -->
+        <div id="screen-create-team" class="screen hidden form-screen">
+            <div class="form-container">
+                <h2 id="create-team-title">🛠️ NEW LOCATION</h2>
+                <div class="error-text hidden" id="team-create-error">❌ THIS NAME IS ALREADY TAKEN BY ANOTHER GUILD!</div>
+                <div class="input-group">
+                    <label>NEW TEAM NAME</label>
+                    <input type="text" id="team-create-name" placeholder="Create unique name...">
+                </div>
+                <div class="input-group">
+                    <label>SET TEAM PASSWORD</label>
+                    <input type="password" id="team-create-pass" placeholder="••••••••">
+                </div>
+                <button class="btn btn-neon" id="btn-do-create-team" onclick="handleCreateTeam()">ACTIVATE</button>
+                <span class="btn-back" onclick="showScreen('screen-dev-choice')">← BACK TO PANEL</span>
+            </div>
+        </div>
+
+        <!-- ================= СХЕМА 7: ИГРОВАЯ ПАНЕЛЬ КОМАНДЫ (DASHBOARD) ================= -->
+        <div id="screen-dashboard" class="screen hidden">
+            <div class="dashboard-layout">
+                <!-- Боковое меню -->
+                <div class="sidebar">
+                    <div>
+                        <div class="team-badge" id="current-team-badge">TEAM: NONE</div>
+                        <div class="nav-menu">
+                            <button class="btn-nav active" id="nav-chat" onclick="switchTab('tab-chat', this)">💬 CHAT</button>
+                            <button class="btn-nav" id="nav-info" onclick="switchTab('tab-info', this)">📢 INFO</button>
+                            <button class="btn-nav" id="nav-members" onclick="switchTab('tab-members', this)">👥 MEMBERS</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger" id="nav-logout" onclick="logout()">LOGOUT</button>
+                </div>
+
+                <!-- Главное окно контента панели -->
+                <div class="main-content">
+                    
+                    <!-- ВКЛАДКА 1: ВНУТРИКОМАНДНЫЙ ЧАТ -->
+                    <div id="tab-chat" class="dashboard-tab">
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chat-box">
+                                <!-- Сообщения рендерятся из JS -->
+                            </div>
+                            <div class="chat-input-bar">
+                                <button class="btn-icon" onclick="triggerImageUpload()">🖼️</button>
+                                <input type="file" id="image-file-input" accept="image/*" class="hidden">
+                                <input type="text" id="chat-input" placeholder="Type data packet..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                                <button class="btn-icon" style="color:var(--accent-cyan);" onclick="sendChatMessage()">⚡</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ВКЛАДКА 2: ИНФОРМАЦИЯ И ОБЪЯВЛЕНИЯ -->
+                    <div id="tab-info" class="dashboard-tab hidden">
+                        <!-- Поле создания объявления (видно только Разработчику) -->
+                        <div id="dev-announcement-controls" class="hidden" style="margin-bottom: 20px;">
+                            <div class="chat-input-bar" style="background: none; padding: 0; border: none;">
+                                <input type="text" id="announcement-input" placeholder="Write global developer report...">
+                                <button class="btn btn-neon" style="width: auto; padding: 0 20px;" onclick="createAnnouncement()">POST</button>
+                            </div>
+                        </div>
+                        <div class="announcements-list" id="announcements-box">
+                            <!-- Объявления рендерятся из JS -->
+                        </div>
+                    </div>
+
+                    <!-- ВКЛАДКА 3: СПИСОК УЧАСТНИКОВ -->
+                    <div id="tab-members" class="dashboard-tab hidden">
+                        <div class="members-container" id="members-box">
+                            <!-- Участники рендерятся из JS -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

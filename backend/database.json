@@ -1,0 +1,42 @@
+{
+  "students": [
+    {
+      "username": "Janibek777",
+      "password": "jan09877890prime654"
+    }
+  ],
+  "teams": {
+    "Prime777": {
+      "password": "prime6540987",
+      "members": [
+        "Janibek777"
+      ],
+      "messages": [
+        {
+          "sender": "Dev_🧹",
+          "type": "text",
+          "text": "sadad"
+        },
+        {
+          "sender": "Dev_🧹",
+          "type": "text",
+          "text": "sdfd"
+        }
+      ],
+      "announcements": [
+        {
+          "text": "🚀 Команда создана разработчиком!"
+        },
+        {
+          "text": "📢 hello guys tomorrow our exam"
+        },
+        {
+          "text": "📢 Hi"
+        },
+        {
+          "text": "📢 Hello guys"
+        }
+      ]
+    }
+  }
+}
