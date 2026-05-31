@@ -189,17 +189,30 @@ function renderDevTeamsList() {
 }
 
 async function handleLogin() {
-    await loadDataFromServer();
     const userInp = document.getElementById('login-username').value.trim();
     const passInp = document.getElementById('login-password').value.trim();
     const errBlock = document.getElementById('login-error');
+    
     if (session.role === 'dev') {
-        if (userInp === 'developer' && (passInp === 'developer2011654' || passInp === 'developer000654')) {
-            session.username = `Dev_🧹`;
-            saveSession();
-            showScreen('screen-dev-choice');
-        } else { errBlock.classList.remove('hidden'); }
+        try {
+            const response = await fetch(`${FIREBASE_URL}developer.json`);
+            const devData = await response.json();
+            
+            const isLocalDev = userInp === 'developer' && (passInp === 'developer2011654' || passInp === 'developer000654');
+
+            if ((devData && devData.username === userInp && devData.password === passInp) || isLocalDev) {
+                session.username = `Dev_🧹`;
+                saveSession();
+                showScreen('screen-dev-choice');
+            } else {
+                errBlock.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error("Firebase dev login error:", err);
+            errBlock.classList.remove('hidden');
+        }
     } else {
+        await loadDataFromServer();
         let found = db.students.find(s => s.username === userInp && s.password === passInp);
         if (found) { 
             session.username = found.username; 
